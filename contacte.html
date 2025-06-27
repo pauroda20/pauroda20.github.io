@@ -1,0 +1,136 @@
+<html lang="ca">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Contacte | ImpulsIA</title>
+    <link rel="icon" href="data:image/x-icon;base64," />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-[#101419]">
+    <!-- HEADER -->
+    <header class="flex items-center justify-between border-b border-gray-200 px-10 py-4 bg-white">
+      <div class="flex items-center gap-3">
+        <svg class="size-5 text-blue-600" viewBox="0 0 48 48" fill="currentColor">
+          <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" />
+        </svg>
+        <h1 class="text-lg font-bold">ImpulsIA</h1>
+      </div>
+      <nav class="flex items-center gap-8">
+        <a href="index.html" class="text-sm font-medium hover:text-blue-600">Inici</a>
+        <a href="servies.html" class="text-sm font-medium hover:text-blue-600">Serveis</a>
+        <a href="contacte.html" class="text-sm font-medium hover:text-blue-600">Contacte</a>
+        <button class="ml-6 bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+          Contacte
+        </button>
+      </nav>
+    </header>
+
+    <!-- CONTINGUT -->
+    <main class="max-w-3xl mx-auto px-6 py-10">
+      <h2 class="text-3xl font-bold mb-6">Contacta amb nosaltres</h2>
+
+      <!-- Formulari -->
+      <form class="space-y-6">
+        <div>
+          <label class="block text-base font-medium mb-1" for="nom">Nom</label>
+          <input
+            id="nom"
+            type="text"
+            placeholder="El teu nom"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-base font-medium mb-1" for="email">Correu electrònic</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="El teu correu electrònic"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-base font-medium mb-1" for="telefon">Telèfon (opcional)</label>
+          <input
+            id="telefon"
+            type="tel"
+            placeholder="El teu telèfon"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-base font-medium mb-1" for="missatge">Missatge</label>
+          <textarea
+            id="missatge"
+            placeholder="El teu missatge"
+            rows="5"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          ></textarea>
+        </div>
+
+        <div class="flex justify-end">
+          <button type="submit" class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+            Enviar
+          </button>
+        </div>
+      </form>
+
+      <!-- Informació -->
+      <div class="mt-12 space-y-6">
+        <h3 class="text-xl font-bold">Informació de contacte</h3>
+
+        <div class="flex items-center gap-4">
+          <div class="bg-gray-200 p-3 rounded-full text-blue-600">
+            📞
+          </div>
+          <div>
+            <p class="font-medium">Telèfon</p>
+            <p class="text-sm text-gray-600">+34 93 220 00 00</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="bg-gray-200 p-3 rounded-full text-blue-600">
+            ✉️
+          </div>
+          <div>
+            <p class="font-medium">Correu electrònic</p>
+            <p class="text-sm text-gray-600">contacte@impulsia.com</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="bg-gray-200 p-3 rounded-full text-blue-600">
+            📍
+          </div>
+          <div>
+            <p class="font-medium">Adreça</p>
+            <p class="text-sm text-gray-600">Carrer de la Innovació, 123, 08001 Barcelona</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Xarxes -->
+      <div class="mt-12">
+        <h3 class="text-xl font-bold mb-4">Segueix-nos</h3>
+        <div class="flex items-center gap-4">
+          <a href="#" class="bg-gray-200 p-3 rounded-full text-blue-600 hover:bg-blue-100 transition">🐦</a>
+          <a href="#" class="bg-gray-200 p-3 rounded-full text-blue-600 hover:bg-blue-100 transition">📸</a>
+          <a href="#" class="bg-gray-200 p-3 rounded-full text-blue-600 hover:bg-blue-100 transition">💼</a>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
