@@ -1,136 +1,227 @@
+<!DOCTYPE html>
 <html lang="ca">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Contacte | ImpulsIA</title>
-    <link rel="icon" href="data:image/x-icon;base64," />
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
-      body {
-        font-family: 'Inter', sans-serif;
-      }
+      body { font-family: 'Inter', sans-serif; }
+      .fade-in { animation: fadeIn 0.6s ease-out both; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0);} }
     </style>
   </head>
-  <body class="bg-gray-50 text-[#101419]">
-    <!-- HEADER -->
-    <header class="flex items-center justify-between border-b border-gray-200 px-10 py-4 bg-white">
+  <body class="bg-gray-50 text-[#101419] flex flex-col min-h-screen">
+    <!-- ===== Header ===== -->
+    <header class="flex items-center justify-between border-b border-gray-200 px-6 md:px-10 py-4 bg-white/70 backdrop-blur sticky top-0 z-50">
       <div class="flex items-center gap-3">
-        <svg class="size-5 text-blue-600" viewBox="0 0 48 48" fill="currentColor">
-          <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" />
-        </svg>
+        <svg class="size-6 text-blue-600" viewBox="0 0 48 48" fill="currentColor"><path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z"/></svg>
         <h1 class="text-lg font-bold">ImpulsIA</h1>
       </div>
-      <nav class="flex items-center gap-8">
-        <a href="index.html" class="text-sm font-medium hover:text-blue-600">Inici</a>
-        <a href="servies.html" class="text-sm font-medium hover:text-blue-600">Serveis</a>
-        <a href="contacte.html" class="text-sm font-medium hover:text-blue-600">Contacte</a>
-        <button class="ml-6 bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-          Contacte
-        </button>
+      <nav class="flex items-center gap-6 text-sm font-medium">
+        <a href="index.html" class="hover:text-blue-600" id="nav-home">Inici</a>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition" id="nav-contact">Contacte</button>
+        <!-- Language selector -->
+        <div class="relative" id="lang-dropdown">
+          <button id="lang-toggle" aria-label="Language selector" class="flex items-center gap-1 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 rounded-full shadow transition">
+            <span id="current-lang">CA</span>
+            <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <ul id="lang-menu" class="absolute right-0 mt-2 w-32 bg-white border border-gray-200 shadow-xl rounded-lg py-1 hidden">
+            <li><button data-lang="ca" class="flex items-center w-full px-3 py-1.5 text-sm hover:bg-blue-50 rounded-t-lg">   Català</button></li>
+            <li><button data-lang="es" class="flex items-center w-full px-3 py-1.5 text-sm hover:bg-blue-50">   Español</button></li>
+            <li><button data-lang="en" class="flex items-center w-full px-3 py-1.5 text-sm hover:bg-blue-50 rounded-b-lg">   English</button></li>
+          </ul>
+        </div>
       </nav>
     </header>
 
-    <!-- CONTINGUT -->
-    <main class="max-w-3xl mx-auto px-6 py-10">
-      <h2 class="text-3xl font-bold mb-6">Contacta amb nosaltres</h2>
+    <!-- ===== Main ===== -->
+    <main class="max-w-3xl mx-auto px-6 py-12 flex-1 fade-in">
+      <h2 class="text-3xl font-bold mb-6" id="page-title"></h2>
 
-      <!-- Formulari -->
-      <form class="space-y-6">
+      <!-- Form -->
+      <form class="space-y-6" id="contact-form">
         <div>
-          <label class="block text-base font-medium mb-1" for="nom">Nom</label>
-          <input
-            id="nom"
-            type="text"
-            placeholder="El teu nom"
-            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <label class="block text-base font-medium mb-1" for="name" id="lbl-name"></label>
+          <input id="name" type="text" class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
-
         <div>
-          <label class="block text-base font-medium mb-1" for="email">Correu electrònic</label>
-          <input
-            id="email"
-            type="email"
-            placeholder="El teu correu electrònic"
-            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <label class="block text-base font-medium mb-1" for="email" id="lbl-email"></label>
+          <input id="email" type="email" class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
-
         <div>
-          <label class="block text-base font-medium mb-1" for="telefon">Telèfon (opcional)</label>
-          <input
-            id="telefon"
-            type="tel"
-            placeholder="El teu telèfon"
-            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <label class="block text-base font-medium mb-1" for="phone" id="lbl-phone"></label>
+          <input id="phone" type="tel" class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
-
         <div>
-          <label class="block text-base font-medium mb-1" for="missatge">Missatge</label>
-          <textarea
-            id="missatge"
-            placeholder="El teu missatge"
-            rows="5"
-            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          ></textarea>
+          <label class="block text-base font-medium mb-1" for="message" id="lbl-message"></label>
+          <textarea id="message" rows="5" class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
         </div>
-
         <div class="flex justify-end">
-          <button type="submit" class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-            Enviar
-          </button>
+          <button type="submit" class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-full hover:bg-blue-700 transition" id="btn-submit"></button>
         </div>
       </form>
 
-      <!-- Informació -->
-      <div class="mt-12 space-y-6">
-        <h3 class="text-xl font-bold">Informació de contacte</h3>
-
+      <!-- Info -->
+      <section class="mt-12 space-y-6">
+        <h3 class="text-xl font-bold" id="info-title"></h3>
         <div class="flex items-center gap-4">
-          <div class="bg-gray-200 p-3 rounded-full text-blue-600">
-            📞
-          </div>
+          <div class="bg-gray-200 p-3 rounded-full text-blue-600">📞</div>
           <div>
-            <p class="font-medium">Telèfon</p>
+            <p class="font-medium" id="info-phone-label"></p>
             <p class="text-sm text-gray-600">+34 93 220 00 00</p>
           </div>
         </div>
-
         <div class="flex items-center gap-4">
-          <div class="bg-gray-200 p-3 rounded-full text-blue-600">
-            ✉️
-          </div>
+          <div class="bg-gray-200 p-3 rounded-full text-blue-600">✉️</div>
           <div>
-            <p class="font-medium">Correu electrònic</p>
-            <p class="text-sm text-gray-600">contacte@impulsia.com</p>
+            <p class="font-medium" id="info-email-label"></p>
+            <p class="text-sm text-gray-600">impulsia123@gmail.com</p>
           </div>
         </div>
-
         <div class="flex items-center gap-4">
-          <div class="bg-gray-200 p-3 rounded-full text-blue-600">
-            📍
-          </div>
+          <div class="bg-gray-200 p-3 rounded-full text-blue-600">📍</div>
           <div>
-            <p class="font-medium">Adreça</p>
+            <p class="font-medium" id="info-address-label"></p>
             <p class="text-sm text-gray-600">Carrer de la Innovació, 123, 08001 Barcelona</p>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Xarxes -->
-      <div class="mt-12">
-        <h3 class="text-xl font-bold mb-4">Segueix-nos</h3>
+      <!-- Social -->
+      <section class="mt-12">
+        <h3 class="text-xl font-bold mb-4" id="social-title"></h3>
         <div class="flex items-center gap-4">
-          <a href="#" class="bg-gray-200 p-3 rounded-full text-blue-600 hover:bg-blue-100 transition">🐦</a>
-          <a href="#" class="bg-gray-200 p-3 rounded-full text-blue-600 hover:bg-blue-100 transition">📸</a>
-          <a href="#" class="bg-gray-200 p-3 rounded-full text-blue-600 hover:bg-blue-100 transition">💼</a>
+          <a href="#" class="bg-gray-200 p-3 rounded-full text-blue-600 hover:bg-blue-100 transition" aria-label="Twitter">🐦</a>
+          <a href="#" class="bg-gray-200 p-3 rounded-full text-blue-600 hover:bg-blue-100 transition" aria-label="Instagram">📸</a>
+          <a href="#" class="bg-gray-200 p-3 rounded-full text-blue-600 hover:bg-blue-100 transition" aria-label="LinkedIn">💼</a>
         </div>
-      </div>
+      </section>
     </main>
+
+    <!-- ===== Footer ===== -->
+    <footer class="bg-gray-900 text-gray-400 py-8 text-center">
+      <p id="footer-text"></p>
+    </footer>
+
+    <!-- ===== Scripts ===== -->
+    <script>
+      const translations = {
+        ca: {
+          navHome: "Inici",
+          navContact: "Contacte",
+          pageTitle: "Contacta amb nosaltres",
+          lblName: "Nom",
+          lblEmail: "Correu electrònic",
+          lblPhone: "Telèfon (opcional)",
+          lblMessage: "Missatge",
+          placeholderName: "El teu nom",
+          placeholderEmail: "El teu correu electrònic",
+          placeholderPhone: "El teu telèfon",
+          placeholderMessage: "El teu missatge",
+          btnSubmit: "Enviar",
+          infoTitle: "Informació de contacte",
+          phoneLabel: "Telèfon",
+          emailLabel: "Correu electrònic",
+          addressLabel: "Adreça",
+          socialTitle: "Segueix-nos",
+          footer: "© 2025 ImpulsIA. Tots els drets reservats."
+        },
+        es: {
+          navHome: "Inicio",
+          navContact: "Contacto",
+          pageTitle: "Contacta con nosotros",
+          lblName: "Nombre",
+          lblEmail: "Correo electrónico",
+          lblPhone: "Teléfono (opcional)",
+          lblMessage: "Mensaje",
+          placeholderName: "Tu nombre",
+          placeholderEmail: "Tu correo electrónico",
+          placeholderPhone: "Tu teléfono",
+          placeholderMessage: "Tu mensaje",
+          btnSubmit: "Enviar",
+          infoTitle: "Información de contacto",
+          phoneLabel: "Teléfono",
+          emailLabel: "Correo electrónico",
+          addressLabel: "Dirección",
+          socialTitle: "Síguenos",
+          footer: "© 2025 ImpulsIA. Todos los derechos reservados."
+        },
+        en: {
+          navHome: "Home",
+          navContact: "Contact",
+          pageTitle: "Get in touch",
+          lblName: "Name",
+          lblEmail: "Email",
+          lblPhone: "Phone (optional)",
+          lblMessage: "Message",
+          placeholderName: "Your name",
+          placeholderEmail: "Your email",
+          placeholderPhone: "Your phone",
+          placeholderMessage: "Your message",
+          btnSubmit: "Send",
+          infoTitle: "Contact information",
+          phoneLabel: "Phone",
+          emailLabel: "Email",
+          addressLabel: "Address",
+          socialTitle: "Follow us",
+          footer: "© 2025 ImpulsIA. All rights reserved."
+        }
+      };
+
+      const currentLangSpan = document.getElementById('current-lang');
+      const dropdownMenu = document.getElementById('lang-menu');
+      const langToggle = document.getElementById('lang-toggle');
+      let activeLang = 'ca';
+
+      const $ = id => document.getElementById(id);
+
+      const updateLang = lang => {
+        activeLang = lang;
+        const t = translations[lang];
+        document.documentElement.lang = lang;
+        currentLangSpan.textContent = lang.toUpperCase();
+
+        // Header
+        $('nav-home').textContent = t.navHome;
+        $('nav-contact').textContent = t.navContact;
+
+        // Form & labels
+        $('page-title').textContent = t.pageTitle;
+        $('lbl-name').textContent = t.lblName;
+        $('name').placeholder = t.placeholderName;
+        $('lbl-email').textContent = t.lblEmail;
+        $('email').placeholder = t.placeholderEmail;
+        $('lbl-phone').textContent = t.lblPhone;
+        $('phone').placeholder = t.placeholderPhone;
+        $('lbl-message').textContent = t.lblMessage;
+        $('message').placeholder = t.placeholderMessage;
+        $('btn-submit').textContent = t.btnSubmit;
+
+        // Info
+        $('info-title').textContent = t.infoTitle;
+        $('info-phone-label').textContent = t.phoneLabel;
+        $('info-email-label').textContent = t.emailLabel;
+        $('info-address-label').textContent = t.addressLabel;
+        $('social-title').textContent = t.socialTitle;
+
+        // Footer
+        $('footer-text').textContent = t.footer;
+      };
+
+      /* ---------- Event Listeners ---------- */
+      langToggle.addEventListener('click', () => dropdownMenu.classList.toggle('hidden'));
+      dropdownMenu.addEventListener('click', e => {
+        const btn = e.target.closest('[data-lang]');
+        if (!btn) return;
+        updateLang(btn.getAttribute('data-lang'));
+        dropdownMenu.classList.add('hidden');
+      });
+
+      updateLang(activeLang);
+    </script>
   </body>
 </html>
