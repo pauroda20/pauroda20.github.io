@@ -16,42 +16,42 @@
   <body class="min-h-screen bg-gray-50 text-gray-900 flex flex-col">
     <!-- ===== Header ===== -->
     <header class="w-full bg-white/70 backdrop-blur border-b border-gray-200 sticky top-0 z-50">
-  <nav class="container mx-auto flex items-center justify-between px-6 py-4">
-    <!-- Logo -->
-    <a href="/" class="flex items-center gap-2 font-bold text-lg tracking-tight">
-      <svg class="h-7 w-7 text-indigo-600" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z"/>
-      </svg>
-      ImpulsIA
-    </a>
-
-    <!-- Right-side nav + language selector -->
-    <div class="flex items-center gap-6">
-      <!-- Desktop Nav Links -->
-      <ul class="hidden md:flex gap-8 text-sm font-medium">
-        <li><a href="#serveis" class="hover:text-indigo-600" id="nav-serveis">Serveis</a></li>
-        <li><a href="#proces" class="hover:text-indigo-600" id="nav-proces">Procés</a></li>
-        <li><a href="#contacte" class="hover:text-indigo-600" id="nav-contacte">Contacte</a></li>
-      </ul>
-
-      <!-- Nice language selector -->
-      <div class="relative" id="lang-dropdown">
-        <button id="lang-toggle" aria-label="Language selector" class="flex items-center gap-1 text-sm font-medium px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 rounded-full shadow transition">
-          <span id="current-lang">CA</span>
-          <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-            <path d="M6 9l6 6 6-6"/>
+      <nav class="container mx-auto flex items-center justify-between px-6 py-4">
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-2 font-bold text-lg tracking-tight">
+          <svg class="h-7 w-7 text-indigo-600" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z"/>
           </svg>
-        </button>
-        <!-- Menu -->
-        <ul id="lang-menu" class="absolute right-0 mt-2 w-32 bg-white border border-gray-200 shadow-xl rounded-lg py-1 hidden">
-          <li><button data-lang="ca" class="flex items-center w-full px-3 py-1.5 text-sm hover:bg-indigo-50 rounded-t-lg">   Català</button></li>
-          <li><button data-lang="es" class="flex items-center w-full px-3 py-1.5 text-sm hover:bg-indigo-50">   Español</button></li>
-          <li><button data-lang="en" class="flex items-center w-full px-3 py-1.5 text-sm hover:bg-indigo-50 rounded-b-lg">   English</button></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</header>
+          ImpulsIA
+        </a>
+
+        <!-- Right-side nav + language selector -->
+        <div class="flex items-center gap-6">
+          <!-- Desktop Nav Links -->
+          <ul class="hidden md:flex gap-8 text-sm font-medium">
+            <li><a href="#serveis" class="hover:text-indigo-600" id="nav-serveis">Serveis</a></li>
+            <li><a href="#proces" class="hover:text-indigo-600" id="nav-proces">Procés</a></li>
+            <li><a href="contacte.html" class="hover:text-indigo-600" id="nav-contacte">Contacte</a></li>
+          </ul>
+
+          <!-- Nice language selector -->
+          <div class="relative" id="lang-dropdown">
+            <button id="lang-toggle" aria-label="Language selector" class="flex items-center gap-1 text-sm font-medium px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 rounded-full shadow transition">
+              <span id="current-lang">CA</span>
+              <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </button>
+            <!-- Menu -->
+            <ul id="lang-menu" class="absolute right-0 mt-2 w-32 bg-white border border-gray-200 shadow-xl rounded-lg py-1 hidden">
+              <li><button data-lang="ca" class="flex items-center w-full px-3 py-1.5 text-sm hover:bg-indigo-50 rounded-t-lg">   Català</button></li>
+              <li><button data-lang="es" class="flex items-center w-full px-3 py-1.5 text-sm hover:bg-indigo-50">   Español</button></li>
+              <li><button data-lang="en" class="flex items-center w-full px-3 py-1.5 text-sm hover:bg-indigo-50 rounded-b-lg">   English</button></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
 
     <!-- ===== Hero Section ===== -->
     <section class="relative overflow-hidden pt-28 pb-32 bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600 text-white">
@@ -84,7 +84,7 @@
       <div class="container mx-auto px-6 text-center max-w-2xl relative z-10 fade-in">
         <h2 class="text-3xl font-bold mb-4" id="cta-title"></h2>
         <p class="mb-8" id="cta-subtitle"></p>
-        <a href="#contacte" class="inline-block rounded-full bg-white px-8 py-3 text-indigo-700 font-semibold hover:bg-gray-100 transition" id="cta-button"></a>
+        <a href="contacte.html" class="inline-block rounded-full bg-white px-8 py-3 text-indigo-700 font-semibold hover:bg-gray-100 transition" id="cta-button"></a>
       </div>
       <div class="absolute -bottom-24 -right-24 h-72 w-72 bg-white/20 rounded-full blur-3xl"></div>
     </section>
@@ -114,7 +114,7 @@
           proces: ["Diagnosi", "Disseny", "Implementació", "Optimització contínua"],
           ctaTitle: "Llest per impulsar la teva empresa?",
           ctaSubtitle: "Contacta'ns per descobrir com les nostres solucions d'IA poden transformar el teu negoci.",
-          ctaButton: "Parlem-ne"
+          ctaButton: "Parlem-ne" 
         },
         es: {
           title: "Impulsa tu negocio con Inteligencia Artificial",
@@ -178,6 +178,8 @@
         document.getElementById('proces-title').textContent = t.procesTitle;
         document.getElementById('cta-title').textContent = t.ctaTitle;
         document.getElementById('cta-subtitle').textContent = t.ctaSubtitle;
+        
+        // Actualiza solo el texto del botón, no el href
         document.getElementById('cta-button').textContent = t.ctaButton;
 
         /* ----- Render Services cards ----- */
