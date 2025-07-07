@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ca">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ImpulsIA | Intel·ligència Artificial per Empreses</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <style>
+      body {
+        font-family: Inter, "Noto Sans", sans-serif;
+      }
+      /* Smooth fade‑in */
+      .fade-in {
+        animation: fadeIn 0.7s ease-out both;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* Smooth scroll for anchor links */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Chatbot specific styles */
+      #chat-bubble {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background-color: #4f46e5; /* Indigo-600 */
+        color: white;
+        border-radius: 9999px; /* Full rounded */
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        z-index: 1000; /* Ensure it's on top */
+      }
+      #chat-bubble:hover {
+        transform: scale(1.05);
+        background-color: #4338ca; /* Darker indigo */
+      }
+
+      #chat-window {
+        position: fixed;
+        bottom: 96px; /* Above the bubble */
+        right: 24px;
+        width: 350px;
+        height: 500px;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 999;
+        transform: translateY(20px); /* For fade-in effect */
+        opacity: 0;
+        transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+      }
+      #chat-window.open {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      #chat-header {
+        background-color: #4f46e5; /* Indigo-600 */
+        color: white;
+        padding: 16px;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      #chat-messages {
+        flex-grow: 1;
+        padding: 16px;
+        overflow-y: auto;
+        background-color: #f9fafb; /* Gray-50 */
+      }
+      .message {
+        margin-bottom: 12px;
+        display: flex;
+      }
+      .message.user {
+        justify-content: flex-end;
+      }
+      .message.ai {
+        justify-content: flex-start;
+      }
+      .message-content {
+        max-width: 80%;
+        padding: 10px 14px;
+        border-radius: 18px;
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
+      .message.user .message-content {
+        background-color: #e0e7ff; /* Indigo-100 */
+        color: #1e293b; /* Slate-800 */
+        border-bottom-right-radius: 2px;
+      }
+      .message.ai .message-content {
+        background-color: #ffffff; /* White */
+        color: #1e293b; /* Slate-800 */
+        border: 1px solid #e5e7eb; /* Gray-200 */
+        border-bottom-left-radius: 2px;
+      }
+      #chat-input-form {
+        display: flex;
+        padding: 16px;
+        border-top: 1px solid #e5e7eb; /* Gray-200 */
+        background-color: white;
+      }
+      #chat-input {
+        flex-grow: 1;
+        border: 1px solid #d1d5db; /* Gray-300 */
+        border-radius: 20px;
+        padding: 8px 16px;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      #chat-input:focus {
+        border-color: #6366f1; /* Indigo-500 */
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+      }
+      #chat-send-button {
+        background-color: #4f46e5; /* Indigo-600 */
+        color: white;
+        border-radius: 20px;
+        padding: 8px 16px;
+        margin-left: 10px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      #chat-send-button:hover {
+        background-color: #4338ca; /* Darker indigo */
+      }
+      #chat-close-button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        line-height: 1;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gray-50 text-gray-900 flex flex-col">
+    <header
+      class="w-full bg-white/70 backdrop-blur border-b border-gray-200 sticky top-0 z-50"
+    >
+      <nav class="container mx-auto flex items-center justify-between px-6 py-4">
+        <a href="/" class="flex items-center gap-2 font-bold text-lg tracking-tight">
+          <svg
+            class="h-7 w-7 text-indigo-600"
+            viewBox="0 0 48 48"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" />
+          </svg>
+          ImpulsIA
+        </a>
+
+        <div class="flex items-center gap-6">
+          <ul class="hidden md:flex gap-8 text-sm font-medium">
+            <li>
+              <a href="#serveis" class="hover:text-indigo-600" id="nav-serveis"
+                >Serveis</a
+              >
+            </li>
+            <li>
+              <a href="#proces" class="hover:text-indigo-600" id="nav-proces"
+                >Procés</a
+              >
+            </li>
+            <li>
+              <a target="_blank" href="contacte.html" class="hover:text-indigo-600" id="nav-contacte"
+                >Contacte</a
+              >
+            </li>
+          </ul>
+
+          <div class="relative" id="lang-dropdown">
+            <button
+              id="lang-toggle"
+              aria-label="Language selector"
+              class="flex items-center gap-1 text-sm font-medium px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 rounded-full shadow transition"
+            >
+              <span id="current-lang">CA</span>
+              <svg
+                class="w-4 h-4 opacity-70"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                viewBox="0 0 24 24"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <ul
+              id="lang-menu"
+              class="absolute right-0 mt-2 w-32 bg-white border border-gray-200 shadow-xl rounded-lg py-1 hidden"
+            >
+              <li>
+                <button
+                  data-lang="ca"
+                  class="flex items-center w-full px-3 py-1.5 text-sm hover:bg-indigo-50 rounded-t-lg"
+                >
+                  Català
+                </button>
+              </li>
+              <li>
+                <button
+                  data-lang="es"
+                  class="flex items-center w-full px-3 py-1.5 text-sm hover:bg-indigo-50"
+                >
+                  Español
+                </button>
+              </li>
+              <li>
+                <button
+                  data-lang="en"
+                  class="flex items-center w-full px-3 py-1.5 text-sm hover:bg-indigo-50 rounded-b-lg"
+                >
+                  English
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <section
+      class="relative overflow-hidden pt-28 pb-32 bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600 text-white"
+    >
+      <div class="container mx-auto px-6 text-center max-w-3xl fade-in">
+        <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight mb-6" id="title"></h1>
+        <p class="text-lg sm:text-xl mb-8" id="subtitle"></p>
+        <a
+          href="#serveis"
+          class="inline-block rounded-full bg-white/10 border border-white/30 px-8 py-3 text-base font-semibold backdrop-blur hover:bg-white/20 transition"
+          >Exploreu els serveis</a
+        >
+      </div>
+      <div class="absolute -top-20 -left-20 h-72 w-72 bg-white/10 rounded-full blur-3xl"></div>
+      <div class="absolute top-24 -right-24 h-96 w-96 bg-white/10 rounded-full blur-[100px]"></div>
+    </section>
+
+    <section id="serveis" class="container mx-auto px-6 py-24">
+      <h2 class="text-3xl font-bold text-center mb-12 fade-in" id="serveis-title"></h2>
+      <div class="grid md:grid-cols-2 gap-12" id="serveis-list"></div>
+    </section>
+
+    <section id="proces" class="bg-gray-100 py-24">
+      <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-12 fade-in" id="proces-title"></h2>
+        <ol class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8" id="proces-list"></ol>
+      </div>
+    </section>
+
+    <section id="contacte" class="py-24 bg-indigo-700 text-white relative overflow-hidden">
+      <div class="container mx-auto px-6 text-center max-w-2xl relative z-10 fade-in">
+        <h2 class="text-3xl font-bold mb-4" id="cta-title"></h2>
+        <p class="mb-8" id="cta-subtitle"></p>
+        <a
+          href="contacte.html"
+          class="inline-block rounded-full bg-white px-8 py-3 text-indigo-700 font-semibold hover:bg-gray-100 transition"
+          id="cta-button"
+        ></a>
+      </div>
+      <div class="absolute -bottom-24 -right-24 h-72 w-72 bg-white/20 rounded-full blur-3xl"></div>
+    </section>
+
+    <footer class="bg-gray-900 text-gray-400 py-10 text-center">
+      <p id="footer-text"></p>
+    </footer>
+
+    <div id="chat-bubble">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-8 h-8"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H15.75M2.25 12c0-1.152.181-2.26.59-3.31a9.75 9.75 0 0 1 1.988-3.07C4.382 4.032 6.132 2.25 8.25 2.25h7.5c2.118 0 3.868 1.782 4.882 4.168a9.75 9.75 0 0 1 1.988 3.07c.409 1.05.59 2.157.59 3.31v.75c0 1.152-.181 2.26-.59 3.31a9.75 9.75 0 0 1-1.988 3.07c-1.014 2.386-2.764 4.168-4.882 4.168h-7.5c-2.118 0-3.868-1.782-4.882-4.168a9.75 9.75 0 0 1-1.988-3.07C2.431 15.01 2.25 13.903 2.25 12.75V12Z"
+        />
+      </svg>
+    </div>
+
+    <div id="chat-window" class="hidden">
+      <div id="chat-header">
+        <h3 class="text-lg font-semibold" id="chat-title"></h3>
+        <button id="chat-close-button">&times;</button>
+      </div>
+      <div id="chat-messages">
+        </div>
+      <form id="chat-input-form">
+        <input
+          type="text"
+          id="chat-input"
+          placeholder="Escriu el teu missatge..."
+          autocomplete="off"
+        />
+        <button type="submit" id="chat-send-button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-5 h-5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+            />
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    <script>
+      /* ---------- Translations ---------- */
+      const translations = {
+        ca: {
+          title: "Impulsa el teu negoci amb Intel·ligència Artificial",
+          subtitle:
+            "Automatitzem, optimitzem i transformem la teva empresa amb solucions d'IA reals i aplicables.",
+          footer: "© 2025 ImpulsIA. Tots els drets reservats.",
+          nav: { serveis: "Serveis", proces: "Procés", contacte: "Contacte" },
+          serveisTitle: "Els nostres serveis",
+          serveis: [
+            [
+              "Automatització de Processos",
+              "Automatitzem tasques repetitives i processos complexos per alliberar el teu equip i augmentar l'eficiència.",
+            ],
+            [
+              "Gestió Intel·ligent d'Estoc",
+              "Optimitza el teu inventari amb previsions basades en IA, reduint costos i millorant la disponibilitat de productes.",
+            ],
+            [
+              "Gestió Intel·ligent de Factures",
+              "Simplifica la teva comptabilitat amb la nostra eina de gestió de factures impulsada per IA, automatitzant la classificació, la conciliació i la detecció d'errors.",
+            ],
+            [
+              "Assistència Telefònica Automatitzada",
+              "La IA gestiona les trucades que rep el teu negoci, proporcionant respostes instantànies i millorant l'atenció al client 24/7.",
+            ],
+          ],
+          procesTitle: "Com treballem",
+          proces: [
+            ["Diagnosi", "Entenem a fons les teves necessitats, reptes i objectius per identificar les millors oportunitats d'IA."],
+            ["Disseny", "Creem solucions personalitzades i definim l'arquitectura tecnològica més adequada per a la teva empresa."],
+            ["Implementació", "Desenvolupem i integrem les solucions d'IA, assegurant una posada en marxa fluida i eficient."],
+            ["Optimització contínua", "Monitoritzem el rendiment, realitzem ajustos i implementem millores per garantir resultats duradors."]
+          ],
+          ctaTitle: "Llest per impulsar la teva empresa?",
+          ctaSubtitle:
+            "Contacta'ns per descobrir com les nostres solucions d'IA poden transformar el teu negoci.",
+          ctaButton: "Parlem-ne",
+          chatTitle: "Xat amb ImpulsIA",
+          chatWelcome: "Hola! Sóc el teu assistent d'IA d'ImpulsIA. Com puc ajudar-te avui amb els nostres serveis?",
+          chatPlaceholder: "Escriu el teu missatge...",
+        },
+        es: {
+          title: "Impulsa tu negocio con Inteligencia Artificial",
+          subtitle:
+            "Automatizamos, optimizamos y transformamos tu empresa con soluciones de IA reales y aplicables.",
+          footer: "© 2025 ImpulsIA. Todos los derechos reservados.",
+          nav: { serveis: "Servicios", proces: "Proceso", contacte: "Contacto" },
+          serveisTitle: "Nuestros servicios",
+          serveis: [
+            [
+              "Automatización de Procesos",
+              "Automatizamos tareas repetitivas y procesos complejos para liberar a tu equipo y aumentar la eficiencia.",
+            ],
+            [
+              "Chatbots Inteligentes",
+              "Mejora la atención al cliente con chatbots que responden preguntas y resuelven problemas.",
+            ],
+            [
+              "Gestión Inteligente de Facturas",
+              "Simplifica tu contabilidad con nuestra herramienta de gestión de facturas impulsada por IA, automatizando la clasificación, la conciliación y la detección de errores.",
+            ],
+            [
+              "Creación de Páginas Web",
+              "Diseñamos y desarrollamos páginas web atractivas y funcionales.",
+            ],
+          ],
+          procesTitle: "Cómo trabajamos",
+          proces: [
+            ["Diagnóstico", "Entendemos a fondo tus necesidades, desafíos y objetivos para identificar las mejores oportunidades de IA."],
+            ["Diseño", "Creamos soluciones personalizadas y definimos la arquitectura tecnológica más adecuada para tu empresa."],
+            ["Implementación", "Desarrollamos e integramos las soluciones de IA, asegurando una puesta en marcha fluida y eficiente."],
+            ["Optimización continua", "Monitorizamos el rendimiento, realizamos ajustes e implementamos mejoras para garantizar resultados duraderos."]
+          ],
+          ctaTitle: "¿Listo para impulsar tu empresa?",
+          ctaSubtitle:
+            "Contáctanos para descubrir cómo nuestras soluciones de IA pueden transformar tu negocio.",
+          ctaButton: "Hablemos",
+          chatTitle: "Chat con ImpulsIA",
+          chatWelcome: "¡Hola! Soy tu asistente de IA de ImpulsIA. ¿Cómo puedo ayudarte hoy con nuestros servicios?",
+          chatPlaceholder: "Escribe tu mensaje...",
+        },
+        en: {
+          title: "Boost your business with Artificial Intelligence",
+          subtitle:
+            "We automate, optimize and transform your company with real and applicable AI solutions.",
+          footer: "© 2025 ImpulsIA. All rights reserved.",
+          nav: { serveis: "Services", proces: "Process", contacte: "Contact" },
+          serveisTitle: "Our Services",
+          serveis: [
+            [
+              "Process Automation",
+              "We automate repetitive tasks and complex processes to free your team and boost efficiency.",
+            ],
+            [
+              "Intelligent Chatbots",
+              "Improve customer service with chatbots that answer questions and solve problems.",
+            ],
+            [
+              "Smart Invoice Management",
+              "Simplify your accounting with our AI-powered invoice management tool, automating classification, reconciliation, and error detection.",
+            ],
+            [
+              "Website Creation",
+              "We design and develop attractive and functional websites.",
+            ],
+          ],
+          procesTitle: "How we work",
+          proces: [
+            ["Diagnosis", "We thoroughly understand your needs, challenges, and goals to identify the best AI opportunities."],
+            ["Design", "We create custom solutions and define the most suitable technological architecture for your company."],
+            ["Implementation", "We develop and integrate AI solutions, ensuring a smooth and efficient deployment."],
+            ["Continuous Optimization", "We monitor performance, make adjustments, and implement improvements to ensure lasting results."]
+          ],
+          ctaTitle: "Ready to boost your business?",
+          ctaSubtitle:
+            "Contact us to discover how our AI solutions can transform your company.",
+          ctaButton: "Let’s talk",
+          chatTitle: "Chat with ImpulsIA",
+          chatWelcome: "Hello! I'm your ImpulsIA AI assistant. How can I help you today with our services?",
+          chatPlaceholder: "Type your message...",
+        },
+      };
+
+      /* ---------- DOM Elements ---------- */
+      const currentLangSpan = document.getElementById("current-lang");
+      const dropdownMenu = document.getElementById("lang-menu");
+      const langToggle = document.getElementById("lang-toggle");
+      let activeLang = "ca"; // Default language
+
+      // Chatbot DOM Elements
+      const chatBubble = document.getElementById("chat-bubble");
+      const chatWindow = document.getElementById("chat-window");
+      const chatCloseButton = document.getElementById("chat-close-button");
+      const chatMessages = document.getElementById("chat-messages");
+      const chatInputForm = document.getElementById("chat-input-form");
+      const chatInput = document.getElementById("chat-input");
+      const chatTitle = document.getElementById("chat-title");
+
+
+      /* ---------- Update Language Function ---------- */
+      const updateLang = (lang) => {
+        activeLang = lang;
+        const t = translations[lang];
+
+        if (!t) {
+          console.error(`Translations for language "${lang}" not found.`);
+          return;
+        }
+
+        document.documentElement.lang = lang;
+        if (currentLangSpan) currentLangSpan.textContent = lang.toUpperCase();
+
+        // Update main content
+        const elementsToUpdate = {
+          title: t.title,
+          subtitle: t.subtitle,
+          "footer-text": t.footer,
+          "nav-serveis": t.nav.serveis,
+          "nav-proces": t.nav.proces,
+          "nav-contacte": t.nav.contacte,
+          "serveis-title": t.serveisTitle,
+          "proces-title": t.procesTitle,
+          "cta-title": t.ctaTitle,
+          "cta-subtitle": t.ctaSubtitle,
+          "cta-button": t.ctaButton,
+          "chat-title": t.chatTitle, // Chat title
+        };
+
+        for (const id in elementsToUpdate) {
+          const element = document.getElementById(id);
+          if (element) {
+            element.textContent = elementsToUpdate[id];
+          } else {
+            console.warn(`Element with ID "${id}" not found.`);
+          }
+        }
+
+        // Update chat input placeholder
+        if (chatInput) {
+            chatInput.placeholder = t.chatPlaceholder;
+        }
+
+
+        /* ----- Render Services cards ----- */
+        const serveisList = document.getElementById("serveis-list");
+        if (serveisList) {
+          serveisList.innerHTML = t.serveis
+            .map(
+              ([title, desc]) => `
+            <article class="bg-white shadow-lg rounded-2xl p-6 transition hover:-translate-y-1 hover:shadow-2xl">
+              <h3 class="text-xl font-semibold mb-2">${title}</h3>
+              <p class="text-gray-700 leading-relaxed">${desc}</p>
+            </article>
+          `
+            )
+            .join("");
+        }
+
+        /* ----- Render Process steps ----- */
+        const procesList = document.getElementById("proces-list");
+        if (procesList) {
+          procesList.innerHTML = t.proces
+            .map(
+              (step, i) => {
+                let title, description;
+                if (Array.isArray(step)) {
+                  [title, description] = step;
+                } else {
+                  title = step;
+                  description = ""; // Default empty if no description provided
+                }
+                return `
+                <li class="relative bg-white rounded-2xl shadow p-6 transition hover:-translate-y-1 hover:shadow-2xl">
+                  <span class="absolute -top-4 -left-4 h-10 w-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">${i + 1}</span>
+                  <h3 class="font-semibold">${title}</h3>
+                  <p class="text-gray-700 text-sm mt-1">${description}</p>
+                </li>
+              `;
+              }
+            )
+            .join("");
+        }
+
+        // Add initial welcome message to chat when language changes
+        if (chatWindow.classList.contains("open")) {
+            displayMessage(t.chatWelcome, 'ai');
+        }
+
+      };
+
+      /* ---------- Chatbot Functions ---------- */
+      const displayMessage = (message, sender) => {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', sender);
+        messageDiv.innerHTML = `<div class="message-content">${message}</div>`;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+      };
+
+      const sendChatMessage = async (message) => {
+        displayMessage(message, 'user');
+        chatInput.value = ''; // Clear input
+
+        // Simulate AI typing/thinking
+        const aiMessageDiv = document.createElement('div');
+        aiMessageDiv.classList.add('message', 'ai');
+        aiMessageDiv.innerHTML = `<div class="message-content">...</div>`; // Typing indicator
+        chatMessages.appendChild(aiMessageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        try {
+          // --- THIS IS WHERE YOU'LL INTEGRATE WITH YOUR BACKEND ---
+          // Replace this simulated response with a fetch call to your server
+          // Your server will then call OpenAI API
+          const response = await fetch('https://n8n.srv868859.hstgr.cloud/webhook-test/chatbot', { 
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: message, lang: activeLang }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          const aiResponse = data.response; // Assuming your backend returns { response: "..." }
+
+          // Remove typing indicator and display actual AI response
+          aiMessageDiv.querySelector('.message-content').textContent = aiResponse;
+
+        } catch (error) {
+          console.error('Error sending message to AI:', error);
+          aiMessageDiv.querySelector('.message-content').textContent = translations[activeLang].chatErrorMessage || "Disculpa, hi ha hagut un error. Si us plau, intenta-ho de nou més tard.";
+          // You might want to add an error message translation for this
+        } finally {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+      };
+
+
+      /* ---------- Event Listeners ---------- */
+      // Language dropdown toggle
+      if (langToggle) {
+        langToggle.addEventListener("click", () => {
+          if (dropdownMenu) dropdownMenu.classList.toggle("hidden");
+        });
+      }
+
+      // Language selection
+      if (dropdownMenu) {
+        dropdownMenu.addEventListener("click", (e) => {
+          const btn = e.target.closest("[data-lang]");
+          if (btn) {
+            const lang = btn.getAttribute("data-lang");
+            updateLang(lang);
+            if (dropdownMenu) dropdownMenu.classList.add("hidden");
+            // Clear chat and show welcome message on lang change
+            chatMessages.innerHTML = '';
+            displayMessage(translations[activeLang].chatWelcome, 'ai');
+          }
+        });
+      }
+
+      // Smooth scroll for internal links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute("href");
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+
+      // Chatbot event listeners
+      if (chatBubble) {
+        chatBubble.addEventListener('click', () => {
+          chatWindow.classList.toggle('hidden');
+          chatWindow.classList.toggle('open');
+          if (chatWindow.classList.contains('open') && chatMessages.children.length === 0) {
+            displayMessage(translations[activeLang].chatWelcome, 'ai');
+          }
+        });
+      }
+
+      if (chatCloseButton) {
+        chatCloseButton.addEventListener('click', () => {
+          chatWindow.classList.add('hidden');
+          chatWindow.classList.remove('open');
+        });
+      }
+
+      if (chatInputForm) {
+        chatInputForm.addEventListener('submit', (e) => {
+          e.preventDefault(); // Prevent page reload
+          const message = chatInput.value.trim();
+          if (message) {
+            sendChatMessage(message);
+          }
+        });
+      }
+
+
+      // Initial language update when DOM is fully loaded
+      document.addEventListener("DOMContentLoaded", () => {
+        updateLang(activeLang);
+      });
+    </script>
+  </body>
+</html>
